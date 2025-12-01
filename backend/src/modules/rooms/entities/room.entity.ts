@@ -1,4 +1,5 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { RoomType } from 'src/modules/RoomType/entities/room-type.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 // Esto define los estados posibles de limpieza
 export enum RoomStatus {
@@ -13,14 +14,11 @@ export class Room {
   @PrimaryGeneratedColumn() // ID Autoincremental (1, 2, 3...)
   id: number;
 
+  @Column({ default: 1 }) // <--- Añadimos un valor por defecto
+  floor: number;
+
   @Column({ unique: true }) // No pueden haber dos habitaciones "101"
   roomNumber: string;
-
-  @Column() // Ejemplo: "Suite Matrimonial", "Simple"
-  type: string;
-
-  @Column('decimal', { precision: 10, scale: 2 }) // Usamos decimal para dinero, NUNCA float
-  pricePerNight: number;
 
   @Column({
     type: 'enum',
@@ -28,4 +26,7 @@ export class Room {
     default: RoomStatus.AVAILABLE,
   })
   status: RoomStatus;
+
+  @ManyToOne(() => RoomType, { eager: true }) // eager: true carga automáticamente el tipo
+  roomType: RoomType;
 }

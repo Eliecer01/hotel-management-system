@@ -3,9 +3,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config'; // <--- Importante
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { RoomsModule } from './rooms/rooms.module';
-import { UsersModule } from './users/users.module';
-import { AuthModule } from './auth/auth.module';
+import { RoomsModule } from './modules/rooms/rooms.module';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { BedTypesModule } from './modules/BedType/bed-types.module';
+import { RoomTypesModule } from './modules/RoomType/room-types.module';
 
 @Module({
   imports: [
@@ -36,6 +38,10 @@ import { AuthModule } from './auth/auth.module';
     UsersModule,
 
     AuthModule,
+
+    BedTypesModule,
+
+    RoomTypesModule,
   ],
   controllers: [AppController],
   providers: [AppService],

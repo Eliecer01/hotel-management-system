@@ -3,6 +3,7 @@ import { CreateRoomDto } from './dto/create-room.dto';
 import { UpdateRoomDto } from './dto/update-room.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Room } from './entities/room.entity';
+import { RoomType } from 'src/modules/RoomType/entities/room-type.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
@@ -11,24 +12,44 @@ export class RoomsService {
   constructor(
     @InjectRepository(Room)
     private readonly roomRepository: Repository<Room>,
+    @InjectRepository(RoomType)
+    private readonly roomTypeRepository: Repository<RoomType>,
   ) {}
 
   // Crear una habitación
   async create(createRoomDto: CreateRoomDto) {
+    const { roomTypeId, ...roomData } = createRoomDto;
+
+    const roomType = await this.roomTypeRepository.findOneBy({
+      id: roomTypeId,
+    });
+    if (!roomType) {
+      throw new NotFoundException(
+        `El tipo de habitación con ID ${roomTypeId} no existe.`,
+      );
+    }
+
     // Crea el objeto en memoria
-    const room = this.roomRepository.create(createRoomDto);
+    const room = this.roomRepository.create({
+      ...roomData,
+      roomType,
+    });
     // Lo guarda en la DB (INSERT INTO...)
     return await this.roomRepository.save(room);
   }
 
   // Obtener todas las habitaciones
   async findAll() {
-    return await this.roomRepository.find();
+    // Usamos relations para que la respuesta incluya el objeto roomType completo
+    return await this.roomRepository.find({ relations: ['roomType'] });
   }
 
   // Obtener una por ID
   async findOne(id: number) {
-    const room = await this.roomRepository.findOneBy({ id });
+    const room = await this.roomRepository.findOne({
+      where: { id },
+      relations: ['roomType'],
+    });
     if (!room) {
       throw new NotFoundException(`La habitación con ID ${id} no existe`);
     }
@@ -37,10 +58,23 @@ export class RoomsService {
 
   // Actualizar una habitación
   async update(id: number, updateRoomDto: UpdateRoomDto) {
+    const { roomTypeId, ...roomData } = updateRoomDto;
     // Primero verificamos que exista (reutilizamos findOne)
     const room = await this.findOne(id);
+
+    if (roomTypeId) {
+      const roomType = await this.roomTypeRepository.findOneBy({
+        id: roomTypeId,
+      });
+      if (!roomType)
+        throw new NotFoundException(
+          `El tipo de habitación con ID ${roomTypeId} no existe.`,
+        );
+      room.roomType = roomType;
+    }
+
     // Fusionamos los cambios
-    this.roomRepository.merge(room, updateRoomDto);
+    this.roomRepository.merge(room, roomData);
     // Guardamos
     return await this.roomRepository.save(room);
   }

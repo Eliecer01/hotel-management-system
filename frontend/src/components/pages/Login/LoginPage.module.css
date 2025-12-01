@@ -1,0 +1,85 @@
+/* src/pages/LoginPage/LoginPage.module.css (o donde lo tengas) */
+
+/* Fondo principal oscuro y elegante */
+.container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  /* Fondo degradado oscuro para dar profundidad */
+  background: linear-gradient(135deg, #1a2a6c, #b21f1f, #fdbb2d); /* Opcional: Degradado vibrante */
+  /* Opción más sobria y elegante para un hotel: */
+  background: linear-gradient(to bottom right, #141e30, #243b55);
+}
+
+/* El "papel" sobre el que está el formulario */
+.card {
+  width: 400px;
+  /* Fondo semitransparente oscuro con efecto "glassmorphism" (opcional) */
+  background: rgba(255, 255, 255, 0.05); /* Muy sutil */
+  backdrop-filter: blur(10px); /* Difumina el fondo detrás del card */
+  
+  /* Bordes dorados sutiles */
+  border: 1px solid rgba(255, 215, 0, 0.2); /* Color dorado */
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  border-radius: 12px;
+  padding: 24px; /* Añadimos padding interno para que respire */
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.icon {
+  font-size: 50px;
+  margin-bottom: 10px;
+  /* Cambiamos el emoji por un color dorado */
+  /* filter: hue-rotate(45deg) brightness(1.2); -> Si quisieras alterar el emoji */
+}
+
+/* ¡Importante! Clases personalizadas para forzar estilos de Ant Design */
+/* Usamos :global para decirle a CSS Modules que estas clases NO deben ser hasheadas */
+
+/* Título principal en dorado/crema */
+.card :global(.ant-typography) {
+    color: #f0e68c !important; /* Color khaki claro / dorado suave */
+}
+
+/* Subtítulo en un tono más apagado */
+.card :global(.ant-typography-secondary) {
+    color: rgba(255, 255, 255, 0.65) !important;
+}
+
+/* Inputs: Fondo oscuro y texto claro */
+.card :global(.ant-input-affix-wrapper) {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 215, 0, 0.3); /* Borde dorado sutil */
+    color: white;
+}
+
+.card :global(.ant-input-affix-wrapper:hover),
+.card :global(.ant-input-affix-wrapper:focus-within) {
+    border-color: #ffd700 !important; /* Dorado brillante al hacer foco */
+}
+
+.card :global(.ant-input) {
+    background-color: transparent !important;
+    color: white !important;
+}
+/* Color de los iconos dentro del input (usuario, candado) */
+.card :global(.ant-input-prefix) {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+/* Botón principal: Dorado hotelero */
+.card :global(.ant-btn-primary) {
+    background-color: #b8860b !important; /* Dark Golden Rod */
+    border-color: #b8860b !important;
+    font-weight: bold;
+    height: 45px; /* Un poco más alto y elegante */
+}
+.card :global(.ant-btn-primary:hover) {
+    background-color: #daa520 !important; /* Dorado más claro al pasar el mouse */
+    border-color: #daa520 !important;
+}

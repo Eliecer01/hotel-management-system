@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { UsersService, User } from '../users/users.service';
+import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
+import { User } from '../users/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -16,16 +17,12 @@ export class AuthService {
     const user = await this.usersService.findOne(username);
 
     if (user && user.password === pass) {
-      // SOLUCIÓN: Desestructuramos para separar el password.
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { password, ...result } = user;
       return result;
     }
     return null;
   }
 
-  // Quitamos 'async' porque sign() es síncrono, o devolvemos una promesa explícita.
-  // Aquí lo dejo síncrono para simplicidad y evitar alertas.
   login(user: { username: string; userId: number }) {
     const payload = { username: user.username, sub: user.userId };
     return {

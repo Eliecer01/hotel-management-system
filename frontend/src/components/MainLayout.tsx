@@ -1,16 +1,26 @@
 import React, { useState } from 'react';
-import { Layout, Menu, theme } from 'antd';
+import { Layout, Menu, theme, Switch, Space, } from 'antd';
 import { Outlet, useNavigate, useLocation } from 'react-router-dom';
 import { 
   DesktopOutlined, 
   UserOutlined, 
   CalendarOutlined, 
-  HomeOutlined 
+  HomeOutlined,
+  MoonOutlined,
+  SunOutlined,
+  SettingOutlined, // 1. Importamos el nuevo icono
 } from '@ant-design/icons';
 
 const { Header, Content, Footer, Sider } = Layout;
+//const { Text } = Typography;
 
-const MainLayout: React.FC = () => {
+// Definimos las props que el componente recibirá
+interface MainLayoutProps {
+  toggleTheme: () => void;
+  currentTheme: 'dark' | 'light';
+}
+
+const MainLayout: React.FC<MainLayoutProps> = ({ toggleTheme, currentTheme }) => {
   const [collapsed, setCollapsed] = useState(false);
   const {
     token: { colorBgContainer, borderRadiusLG },
@@ -25,6 +35,16 @@ const MainLayout: React.FC = () => {
     { key: '/rooms', icon: <DesktopOutlined />, label: 'Habitaciones' },
     { key: '/guests', icon: <UserOutlined />, label: 'Huéspedes' },
     { key: '/bookings', icon: <CalendarOutlined />, label: 'Reservas' },
+    // 2. Añadimos un submenú para la configuración
+    {
+      key: 'settings',
+      icon: <SettingOutlined />,
+      label: 'Configuración',
+      children: [
+        { key: '/settings/bed-types', label: 'Tipos de Cama' },
+        { key: '/settings/room-types', label: 'Tipos de Habitación' },
+      ],
+    },
   ];
 
   return (
@@ -40,7 +60,22 @@ const MainLayout: React.FC = () => {
         />
       </Sider>
       <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
+        <Header style={{ 
+          padding: '0 24px', 
+          background: colorBgContainer,
+          display: 'flex',
+          justifyContent: 'flex-end',
+          alignItems: 'center'
+        }}>
+          <Space>
+            <SunOutlined />
+            <Switch 
+              checked={currentTheme === 'dark'} 
+              onChange={toggleTheme} 
+            />
+            <MoonOutlined />
+          </Space>
+        </Header>
         <Content style={{ margin: '16px' }}>
           <div
             style={{

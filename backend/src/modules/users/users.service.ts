@@ -1,13 +1,9 @@
 import { Injectable } from '@nestjs/common';
-
-export type User = {
-  userId: number;
-  username: string;
-  password: string;
-};
+import { User } from './entities/user.entity'; // Importamos la entidad
 
 @Injectable()
 export class UsersService {
+  // Simulamos DB
   private readonly users: User[] = [
     {
       userId: 1,
@@ -17,8 +13,6 @@ export class UsersService {
   ];
 
   async findOne(username: string): Promise<User | undefined> {
-    // ESLint exige que si es async, devuelva una Promesa.
-    // Usamos Promise.resolve para simular la espera de la DB.
     return Promise.resolve(
       this.users.find((user) => user.username === username),
     );
